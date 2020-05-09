@@ -20,6 +20,12 @@ io.on('connection',(socket)=>{
 
     socket.on('createMsg',(msg)=>{
         console.log('createMsg',msg);
+
+        io.emit('newMsg',{
+            from: msg.from,
+            text: msg.text,
+            createdAr: new Date().getTime()
+        });
     })
 
     socket.on('disconnect', () => {
