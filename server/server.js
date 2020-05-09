@@ -4,7 +4,7 @@ const port = process.env.PORT || 3000;
 const express = require('express');
 const socketIO = require('socket.io');
 const http = require('http');
-var { genrateMessage} = require('./utils/message');
+var { genrateMessage, genrateLocationMessage} = require('./utils/message');
 
 var app = express();
 var server = http.createServer(app);
@@ -28,6 +28,10 @@ io.on('connection',(socket)=>{
         //     createdAr: new Date().getTime()
         // });
         //socket.broadcast.emit('newMsg', genrateMessage(msg.from,msg.text));
+    });
+
+    socket.on('createLocationMsg',(cords)=>{
+        io.emit('LocationMsg',genrateLocationMessage('Admin',cords.lat,cords.long));
     });
 
     socket.on('disconnect', () => {
