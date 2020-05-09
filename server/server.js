@@ -4,6 +4,8 @@ const port = process.env.PORT || 3000;
 const express = require('express');
 const socketIO = require('socket.io');
 const http = require('http');
+var { genrateMessage} = require('./utils/message');
+
 var app = express();
 var server = http.createServer(app);
 
@@ -12,32 +14,21 @@ var io = socketIO(server);
 io.on('connection',(socket)=>{
     console.log('New user connected');
 
-    socket.emit('newMsg',{
-        from: 'Admin',
-        text: 'Welcome To chat App',
-        createdAt: new Date().getTime()
-    });
+    socket.emit('newMsg', genrateMessage("Admin","Welcome to chat App"));
 
-    socket.broadcast.emit('newMsg',{
-        from: 'Admin',
-        text: 'New User Joined',
-        createdAt: new Date().getTime()
-    });
+    socket.broadcast.emit('newMsg', genrateMessage("Admin", "New User Joined"));
 
-    socket.on('createMsg',(msg)=>{
+    socket.on('createMsg',(msg,callback)=>{
         console.log('createMsg',msg);
-
+        io.emit('newMsg',genrateMessage(msg.from, msg.text));
+        callback('this is from server');
         // io.emit('newMsg',{
         //     from: msg.from,
         //     text: msg.text,
         //     createdAr: new Date().getTime()
         // });
-        socket.broadcast.emit('newMsg',{
-            from: msg.from,
-            text: msg.text,
-            createdAr: new Date().getTime()
-        })
-    })
+        //socket.broadcast.emit('newMsg', genrateMessage(msg.from,msg.text));
+    });
 
     socket.on('disconnect', () => {
         console.log('tab is closed');
