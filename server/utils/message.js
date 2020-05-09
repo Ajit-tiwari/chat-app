@@ -7,6 +7,7 @@ var genrateMessage = (from,text) =>{
 };
 var genrateLocationMessage = (from,lat,long)=>{
     return {
+        from,
         url: `http://www.google.com/maps?q=${lat},${long}`,
         createdAt: new Date().getTime()
     };
