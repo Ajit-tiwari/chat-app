@@ -16,21 +16,37 @@ socket.on('disconnect', function () {
 //custom Event   ... on is used for listening event
 socket.on('newMsg', function (msg) {    
     var formattedTime=moment(msg.createdAt).format('h:mm a');
-    var li =jQuery('<li></li>');
-    li.text(`${msg.from} ${formattedTime}: ${msg.text}`)
+    // var li =jQuery('<li></li>');
+    // li.text(`${msg.from} ${formattedTime}: ${msg.text}`)
 
-    jQuery('#msg').append(li);
+    // jQuery('#msg').append(li);
+    var template = jQuery('#msg-template').html();
+    var html = Mustache.render(template,{
+        text: msg.text,
+        from: msg.from,
+        createdAt: formattedTime
+    });
+
+    jQuery('#msg').append(html);
 
 });
 
 socket.on('LocationMsg',function(msg){
-    var formattedTime = moment(msg.createdAt).format('h:mm a');
-    var li = jQuery('<li></li>');
-    var a = jQuery('<a target="_blank">My Current Loaction</a>');
-    li.text(`${msg.from} ${formattedTime}: `);
-    a.attr('href',msg.url);
-    li.append(a);
-    jQuery('#msg').append(li);
+
+    var formattedTime=moment(msg.createdAt).format('h:mm a');
+    var template = jQuery('#location-template').html();
+    var html = Mustache.render(template,{
+        from: msg.from,
+        createdAt: formattedTime,
+        url: msg.url
+    });
+    // var formattedTime = moment(msg.createdAt).format('h:mm a');
+    // var li = jQuery('<li></li>');
+    // var a = jQuery('<a target="_blank">My Current Loaction</a>');
+    // li.text(`${msg.from} ${formattedTime}: `);
+    // a.attr('href',msg.url);
+    // li.append(a);
+    jQuery('#msg').append(html);
 })
 
 jQuery('#msg_form').on('submit',function(e){
