@@ -40,6 +40,15 @@ socket.on('disconnect', function () {
     console.log('disconnected to server');
 });
 
+socket.on('updateUserList',function(user){
+    var ol=jQuery('<ol></ol>');
+    user.forEach(function(user){
+        ol.append(jQuery('<li></li>').text(user));
+    })
+    jQuery('#users').html(ol);
+});
+
+
 //custom Event   ... on is used for listening event
 socket.on('newMsg', function (msg) {    
     var formattedTime=moment(msg.createdAt).format('h:mm a');
