@@ -15,18 +15,19 @@ socket.on('disconnect', function () {
 
 //custom Event   ... on is used for listening event
 socket.on('newMsg', function (msg) {    
-    console.log('New msg ',msg);
+    var formattedTime=moment(msg.createdAt).format('h:mm a');
     var li =jQuery('<li></li>');
-    li.text(`${msg.from}: ${msg.text}`)
+    li.text(`${msg.from} ${formattedTime}: ${msg.text}`)
 
     jQuery('#msg').append(li);
 
 });
 
 socket.on('LocationMsg',function(msg){
+    var formattedTime = moment(msg.createdAt).format('h:mm a');
     var li = jQuery('<li></li>');
     var a = jQuery('<a target="_blank">My Current Loaction</a>');
-    li.text(`${msg.from}:`);
+    li.text(`${msg.from} ${formattedTime}: `);
     a.attr('href',msg.url);
     li.append(a);
     jQuery('#msg').append(li);
